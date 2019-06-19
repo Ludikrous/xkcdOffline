@@ -1,7 +1,7 @@
 # xkcdOffline
 Download all of XKCD's comics to keep offline and read on the go!
 
-> ### This project is in progress
+> ### This project is a work in progress
 
 #### Todo
 - Download all comics from XKCD
