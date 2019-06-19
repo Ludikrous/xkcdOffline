@@ -2,26 +2,22 @@ package main
 
 import (
 	"fmt"
-	"image"
 )
 
 type comic struct {
-	number  int
-	address string
-	title   string
-	image   image.Image
+	Number  int
+	Title   string
+	Caption string
+	Address string
 }
 
 func New(number int) (c comic) {
 	// initialize comic struct
 	c = comic{}
-	c.number = number
-	c.address = fmt.Sprintf("http://www.xkcd.com/%d", number)
+	c.Number = number
 
-	// get data from xkcd servers
-	c.populateData()
+	comicURL := fmt.Sprintf("http://www.xkcd.com/%s", c.Title)
 
-	// return populated struct
 	return c
 }
 
