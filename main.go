@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 const URL string = "https://xkcd.com/"
@@ -37,7 +38,6 @@ func main() {
 
 	// populate picture folder with all the xkcd comics
 	allComics := getAllComics()
-
 	// download all comics into the given directory
 	for _, comic := range allComics {
 		download(comic, &pictureFolder)
@@ -53,7 +53,10 @@ func download(c comic.Comic, pictureFolder *string) {
 	defer response.Body.Close()
 
 	//open a file for writing
-	filename := fmt.Sprintf("%v/xkcd%d_%s", pictureFolder, c.Number, c.SafeTitle)
+	splitURL := strings.Split(c.Address, "/")
+	fileEnding := splitURL[len(splitURL)-1]
+
+	filename := fmt.Sprintf("%v/xkcdOffline/xkcd%d_%s", *pictureFolder, c.Number, fileEnding)
 	file, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -74,11 +77,11 @@ func getAllComics() []comic.Comic {
 	currNumber := getHighestComicNum()
 
 	// make a slice of comics and populate them
-	allComics := make([]comic.Comic, currNumber+1)
+	allComics := make([]comic.Comic, currNumber)
 	// iterate through all comics
 	for num := currNumber; num > 0; num-- {
 		c := comic.NewComic(num)
-		allComics[num] = c
+		allComics[num-1] = c
 		fmt.Println(c)
 	}
 
