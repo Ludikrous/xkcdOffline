@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/ludikrous/xkcdOffline/comic"
 	_ "github.com/ludikrous/xkcdOffline/comic"
@@ -14,33 +15,27 @@ import (
 const URL string = "https://xkcd.com/"
 const JSON_PATH string = "/info.0.json"
 
-//func main() {
-//	// define flags
-//	pictureFolder := flag.String("loc", "./xkcd_comics/", "Full path for the folder in which comics will be stored")
-//	// TODO flags to add:
-//	// log into csv, high res, add title and captions to image, compile into pdf, start end date, start end number
-//
-//	// parse flags
-//	flag.Parse()
-//
-//	// populate picture folder with all the xkcd comics
-//	allComics := getAllComics(pictureFolder)
-//
-//	// download all comics into the given directory
-//	for _, comic := range(allComics) {
-//		download(comic, pictureFolder)
-//	}
-//}
-
 func main() {
 	// define flags
-	pictureFolder := "/Users/dhanvee_ivaturi/Downloads/"
+	pictureFolder := flag.String("loc", ".", "Full path for the folder in which comics will be stored")
+	// TODO flags to add:
+	// log into csv, high res, add title and captions to image, compile into pdf, start end date, start end number
+
+	// parse flags
+	flag.Parse()
+
+	err := os.MkdirAll(fmt.Sprintf("%s/xkcdOffline", *pictureFolder), os.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(-1)
+	}
 
 	// populate picture folder with all the xkcd comics
 	allComics := getAllComics()
+
 	// download all comics into the given directory
 	for _, comic := range allComics {
-		download(comic, &pictureFolder)
+		download(comic, pictureFolder)
 	}
 }
 
@@ -56,7 +51,7 @@ func download(c comic.Comic, pictureFolder *string) {
 	splitURL := strings.Split(c.Address, "/")
 	fileEnding := splitURL[len(splitURL)-1]
 
-	filename := fmt.Sprintf("%v/xkcdOffline/xkcd%d_%s", *pictureFolder, c.Number, fileEnding)
+	filename := fmt.Sprintf("%s/xkcdOffline/xkcd%d_%s", *pictureFolder, c.Number, fileEnding)
 	file, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +63,7 @@ func download(c comic.Comic, pictureFolder *string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Saved comic #%d to disk.", c.Number)
+	fmt.Println("Saved comic #%d to disk.", c.Number)
 
 }
 
