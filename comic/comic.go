@@ -1,4 +1,4 @@
-package main
+package comic
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type comic struct {
+type Comic struct {
 	Number int
 
 	Month int `json:"month,string"`
@@ -21,11 +21,11 @@ type comic struct {
 	Address string `json:"img"`
 }
 
-// NewComic returns a comic object with all fields populated based on the given comic number.
+// NewComic returns a Comic object with all fields populated based on the given Comic number.
 // It fetches data for all these fields from the xkcd api (https://xkcd.com/json.html).
-func NewComic(number int) (c comic) {
-	// initialize comic struct
-	c = comic{}
+func NewComic(number int) (c Comic) {
+	// initialize Comic struct
+	c = Comic{}
 	c.Number = number
 
 	// http GET request to xkcd api
